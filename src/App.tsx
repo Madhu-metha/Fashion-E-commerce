@@ -9,6 +9,7 @@ import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import ProductDetail from "./pages/Product/ProductDetail";
 import Cart from "./pages/Cart/Cart";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
           <Route path="/product/:id" element={<ProductDetail />} />
 
           {/* Cart */}
-          <Route path="/cart" element={<Cart />} />
+          <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
         </Routes>
       </main>
 
