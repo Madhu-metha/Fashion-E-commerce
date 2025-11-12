@@ -1,0 +1,63 @@
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html, 
+body,
+#root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  @apply bg-white text-gray-900;
+  font-family: 'Inter', sans-serif;
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-4;
+}
+
+.btn-primary {
+  @apply bg-pink-500 text-white font-semibold px-4 py-2 rounded-xl hover:bg-pink-600 transition;
+}
+
+.card {
+  @apply border border-gray-100 shadow-sm rounded-2xl;
+}
+
+.link {
+  @apply text-pink-500 hover:underline;
+}
+
+/* Custom slick arrows */
+.custom-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.8);
+  color: #111;
+  font-size: 2rem;
+  font-weight: bold;
+  line-height: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-arrow:hover {
+  background: #ec4899; /* Tailwind pink-500 */
+  color: #fff;
+}
