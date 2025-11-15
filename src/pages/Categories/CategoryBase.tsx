@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-import ProductCard, { type Product } from "../../components/common/ProductCard";
+import ProductCard, { type Product } from "../../components/ProductCard";
 import api from "../../lib/axios";
 
 type Props = {

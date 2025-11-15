@@ -1,23 +1,13 @@
-//import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
-import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import TrendingSlider from "./TrendingSlider";
+
 //import Tooltip from "@mui/material/Tooltip";
 //import { motion } from "framer-motion";
-
 //import api from "../../lib/axios";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
-interface Product {
-    _id: string;
-    name: string;
-    price: number;
-    image: string;
-    category: string;
-}
 
 // Slider settings
 const heroSliderSettings = {
@@ -64,52 +54,6 @@ export default function Home() {
     //     fetchProducts();
     // }, []);
 
-    // Fallback trending data 
-    const fallbackTrending: Product[] = [
-        {
-            _id: "1",
-            name: "Summer Cotton Dress",
-            price: 999,
-            image: "/products/dress1.png",
-            category: "Women",
-        },
-        {
-            _id: "2",
-            name: "Men's Casual Shirt",
-            price: 1299,
-            image: "/products/men1.png",
-            category: "Men",
-        },
-        {
-            _id: "3",
-            name: "Kids Frock",
-            price: 499,
-            image: "/products/kid1.png",
-            category: "Kids",
-        },
-        {
-            _id: "4",
-            name: "Formal Wear Suit",
-            price: 1499,
-            image: "/products/kid2.png",
-            category: "Men",
-        },
-        {
-            _id: "5",
-            name: "Floral Anarkali",
-            price: 899,
-            image: "/products/women3.png",
-            category: "Women",
-        },
-        {
-            _id: "6",
-            name: "Party Wear Frock",
-            price: 1099,
-            image: "/products/women4.png",
-            category: "Women",
-        },
-    ];
-
     return (
         <div className="bg-white">
 
@@ -149,7 +93,7 @@ export default function Home() {
                         {["levi", "puma", "hm", "nike", "uspa", "adidas", "peterengland", "allensolly"].map((brand) => (
                             <div
                                 key={brand}
-                                className="flex justify-center items-center p-4 hover:bg-white hover:shadow-md rounded-2xl transition-all duration-300"
+                                className="flex justify-center items-center p-4 hover:bg-white hover:shadow-md rounded-2xl transition-all duration-200"
                             >
                                 <img
                                     src={`/brands/${brand}.jpg`}
@@ -157,13 +101,16 @@ export default function Home() {
                                         ((e.target as HTMLImageElement).src = `/brands/${brand}.png`)
                                     }
                                     alt={brand}
-                                    className="h-32 w-auto object-contain hover:scale-110 transition-transform duration-300"
+                                    className="h-32 w-auto object-contain hover:scale-110 transition-transform duration-200"
                                 />
                             </div>
                         ))}
                     </Slider>
                 </div>
             </section>
+
+            {/* ================= TRENDING NOW ================= */}
+            <TrendingSlider />
 
             {/* ================= SHOP BY CATEGORY ================= */}
             <section className="py-14 bg-white border-t border-gray-100">
@@ -193,48 +140,6 @@ export default function Home() {
                                     </span>
                                 </div>
                             </Link>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* ================= TRENDING NOW ================= */}
-            <section className="py-14 bg-gray-50 border-t border-gray-100">
-                <div className="max-w-7xl mx-auto px-4">
-                    <div className="flex justify-between items-center mb-8">
-                        <h2 className="text-2xl font-bold text-gray-800 tracking-wide">
-                            Trending Now
-                        </h2>
-                        <Link to="/categories" className="text-pink-500 font-semibold hover:underline">
-                            View All
-                        </Link>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {(fallbackTrending).map((product) => (
-                            <div
-                                key={product._id}
-                                className="bg-white rounded-2xl shadow-sm hover:shadow-lg overflow-hidden transition-all duration-300"
-                            >
-                                <div className="relative">
-                                    <img
-                                        src={product.image}
-                                        alt={product.name}
-                                        onError={(e) => ((e.target as HTMLImageElement).src = "/static/placeholder.jpg")}
-                                        className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                                    />
-                                    <button className="absolute top-3 right-3 bg-white p-1 rounded-full shadow">
-                                        <FavoriteBorderIcon className="text-pink-500" />
-                                    </button>
-                                </div>
-                                <div className="p-4 text-center">
-                                    <h3 className="font-semibold text-gray-800">{product.name}</h3>
-                                    <p className="text-gray-500 text-sm mb-1">{product.category}</p>
-                                    <p className="font-bold text-lg text-pink-500">₹{product.price}</p>
-                                    <button className="mt-3 flex items-center justify-center gap-2 w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-full">
-                                        <ShoppingBagIcon /> Add to Bag
-                                    </button>
-                                </div>
-                            </div>
                         ))}
                     </div>
                 </div>

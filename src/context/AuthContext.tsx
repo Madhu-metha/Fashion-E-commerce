@@ -1,8 +1,9 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 
 interface User {
     name: string;
     email: string;
+    token: string;
 }
 
 interface AuthContextType {
@@ -12,24 +13,40 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export default AuthContext;
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
 
-    // Load user from localStorage on app start
     useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) setUser(JSON.parse(storedUser));
+        const stored = localStorage.getItem("user");
+        try {
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                setUser(parsed);
+            } else {
+                setUser(null);
+            }
+        } catch (error) {
+            console.error("Invalid JSON found in localStorage 'user'. Clearing it...");
+            localStorage.removeItem("user");
+            setUser(null);
+        }
     }, []);
 
-    const login = (userData: User) => {
-        setUser(userData);
-        localStorage.setItem("user", JSON.stringify(userData));
+    const login = (data: User) => {
+        setUser(data);
+        localStorage.setItem("user", JSON.stringify(data));
+        localStorage.setItem("token", data.token);
     };
 
     const logout = () => {
-        setUser(null);
+        localStorage.removeItem("token");
         localStorage.removeItem("user");
+        setUser(null);
+
+        localStorage.removeItem("cart");
+        window.location.reload();
     };
 
     return (
@@ -37,10 +54,4 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             {children}
         </AuthContext.Provider>
     );
-}
-
-export function useAuth() {
-    const context = useContext(AuthContext);
-    if (!context) throw new Error("useAuth must be used inside AuthProvider");
-    return context;
 }

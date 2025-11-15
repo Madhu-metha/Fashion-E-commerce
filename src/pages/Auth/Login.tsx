@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import api from "../../lib/axios";
+import { useAuth } from "../../context/useAuth";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -8,6 +10,8 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
+
+    const { login } = useAuth();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -17,13 +21,21 @@ export default function Login() {
         try {
             const { data } = await api.post("/auth/login", { email, password });
 
-            // Save user info and token in localStorage
-            localStorage.setItem("user", JSON.stringify(data));
+            // Save user into AuthContext
+            login({
+                name: data.name,
+                email: data.email,
+                token: data.token,
+            });
+
+            // localStorage.setItem("token", data.token);
+            // localStorage.setItem("user", JSON.stringify(data.user));
 
             alert("Login successful!");
             navigate("/");
+           // window.location.reload();
         } catch (err: any) {
-            console.error("Login error:", err);
+            //console.error("Login error:", err);
             setError(
                 err.response?.data?.message || "Login failed. Please check your credentials."
             );
@@ -77,8 +89,8 @@ export default function Login() {
                     <button
                         disabled={loading}
                         className={`w-full mt-2 py-2 rounded-xl text-white font-medium transition ${loading
-                                ? "bg-blue-300 cursor-not-allowed"
-                                : "bg-blue-500 hover:bg-blue-600"
+                            ? "bg-blue-300 cursor-not-allowed"
+                            : "bg-blue-500 hover:bg-blue-600"
                             }`}
                         type="submit"
                     >

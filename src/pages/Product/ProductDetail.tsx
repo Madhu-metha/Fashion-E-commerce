@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import api from "../../lib/axios"; 
+import api from "../../lib/axios";
 
 type Product = {
     _id?: string;
@@ -40,19 +40,42 @@ export default function ProductDetail() {
 
     const handleAddToCart = async () => {
         // check auth token: modify according to your auth flow
-        const token = localStorage.getItem("token");
-        if (!token) {
+        const user = localStorage.getItem("user");
+        if (!user) {
             alert("Please log in to add items to your cart.");
             nav("/login");
             return;
         }
 
         try {
-            await api.post("/cart", { productId: id, quantity: 1 });
+            await api.post("/cart", {
+                productId: product._id,
+                quantity: 1
+            });
+
             alert("Added to cart!");
         } catch (err: any) {
-            console.error(err);
-            alert(err?.response?.data?.message || "Failed to add to cart");
+            console.error("Add To Cart Failed:", err);
+            alert(err.response?.data?.message || "Failed to add to cart");
+        }
+    };
+
+    const handleAddToWishlist = async () => {
+        try {
+            const user = localStorage.getItem("user");
+            if (!user) {
+                alert("Please login to continue.");
+                nav("/login");
+                return;
+            }
+
+            await api.post("/wishlist", {
+                productId: product?._id
+            });
+            alert("Added to wishlist!");
+        } catch (err: any) {
+            console.error("Error adding to wishlist:", err);
+            alert(err.response?.data?.message || "Failed to add to wishlist.");
         }
     };
 
@@ -71,12 +94,24 @@ export default function ProductDetail() {
                 <div className="text-2xl font-bold text-pink-500">₹{product.price}</div>
                 <p className="text-gray-600">{product.description}</p>
 
-                <div className="flex gap-3 mt-6 px-6 py-3 bg-pink-500 text-white rounded-lg">
-                    <button onClick={handleAddToCart} className="btn-primary">
+                <div className="flex gap-4 mt-6">
+                    {/* Add to Cart Button */}
+                    <button
+                        onClick={handleAddToCart}
+                        className="flex-1 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold px-8 py-3 rounded-lg shadow-md hover:from-pink-600 hover:to-pink-700 transition-all duration-300 transform hover:scale-[1.02]"
+                    >
                         Add to Cart
                     </button>
-                    <button className="border rounded px-4 py-2">Wishlist</button>
+
+                    {/* Wishlist Button */}
+                    <button
+                        onClick={handleAddToWishlist}
+                        className="flex-1 border-2 border-pink-500 text-pink-600 font-semibold px-8 py-3 rounded-lg hover:bg-pink-50 transition-all duration-300 transform hover:scale-[1.02]"
+                    >
+                        Wishlist
+                    </button>
                 </div>
+
             </div>
         </section>
     );

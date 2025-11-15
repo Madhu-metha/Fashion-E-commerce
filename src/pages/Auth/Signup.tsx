@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import api from "../../lib/axios"; 
+import api from "../../lib/axios";
+import { useAuth } from "../../context/useAuth";
 
 export default function Signup() {
     const [name, setName] = useState("");
@@ -9,7 +10,9 @@ export default function Signup() {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -17,15 +20,27 @@ export default function Signup() {
         setLoading(true);
 
         try {
+            // Register the user
             const { data } = await api.post("/auth/register", {
                 name,
                 email,
                 password,
             });
 
-            console.log("Signup success:", data);
+            // data = { message, token, user }
+
+            // Save user to AuthContext
+            login({
+                name: data.user.name,
+                email: data.user.email,
+                token: data.token,
+            });
+
+            // Save token for axios interceptor
+            localStorage.setItem("token", data.token);
+
             alert("Account created successfully!");
-            navigate("/login");
+            navigate("/");
         } catch (err: any) {
             console.error("Signup error:", err);
             setError(
@@ -40,7 +55,7 @@ export default function Signup() {
         <div className="flex justify-center items-center min-h-[90vh] bg-gradient-to-br from-pink-50 via-white to-blue-50">
             <div className="card p-8 w-full max-w-md bg-white shadow-lg rounded-2xl border border-pink-100">
                 <h1 className="text-3xl font-bold mb-6 text-center text-pink-500">
-                    Create Your Account 
+                    Create Your Account
                 </h1>
 
                 <form onSubmit={handleSignup} className="space-y-5">
